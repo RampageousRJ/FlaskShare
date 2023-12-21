@@ -11,7 +11,7 @@ class People(db.Model,UserMixin):
     username = db.Column(db.String(20),nullable=False,unique=True)
     email = db.Column(db.String(120),nullable=False,unique=True)
     password_hash = db.Column(db.String(128),nullable=False)
-    password_hash2 = db.Column(db.String(128))
+    type = db.Column(db.String(128),nullable=False)
     
     @property
     def password(self):
@@ -26,3 +26,8 @@ class People(db.Model,UserMixin):
     
     def __repr__(self):
         return f"<{self.username}>"
+    
+class File(db.Model):
+    id = db.Column(db.Integer,primary_key=True)
+    filename = db.Column(db.String(1024),nullable=False)
+    data = db.Column(db.LargeBinary)

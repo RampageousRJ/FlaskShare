@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  Register
+{% endblock %}
+
+{% block body %}
+    <br />
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-8 shadow p-3 mb-5 bg-dark rounded">
+                    <br>
+                    <h3 class="text-center">Register User</h3>
+                    <form method="POST" class='form-register' style="padding: 2%;">
+                        <br>
+                        <div class="row">
+                            <div class="col text-center">
+                                <label>
+                                    <input type="radio" name="radio" value="Admin">
+                                    <span class="radio-btn">
+                                        Admin
+                                    </span>
+                                </label>
+                            </div>
+                            <div class="col text-center">
+                                <label>
+                                    <input type="radio" name="radio" value="Regular" checked>
+                                    <span class="radio-btn">
+                                        Regular
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="form-labels">
+                            {{form.hidden_tag()}}
+                            {{form.username.label()}}
+                            {{form.username(class='form-control', placeholder='User Name')}}
+                            <br>
+                            {{form.email.label()}}
+                            {{form.email(class='form-control', placeholder='Email Address')}}
+                            <br>
+                            {{form.password_hash.label()}}
+                            {{form.password_hash(class='form-control', placeholder='Password')}}
+                            <br>
+                            <br>
+                            {{form.recaptcha(class='form-control', placeholder='Recaptcha')}}
+                            <br>
+                            <br>
+                            <div class="form-group text-center">
+                                {{ form.submit(class = 'btn btn-success') }}
+                                <br>
+                            </div>
+                            <div class="form-group" style="text-align:center">
+                                <h6>Already have an account? <a href="{{url_for('login')}}">Login Here</a></h6>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
