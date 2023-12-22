@@ -1,9 +1,10 @@
 from share import app,db
-from flask import render_template,flash,redirect,url_for,request
+from flask import render_template,flash,redirect,url_for,request,send_file
 from flask_bcrypt import check_password_hash
 from flask_login import current_user,login_user,login_required,logout_user
 from share.forms import *
 from share.models import *
+from io import BytesIO
 import os
 
 @app.route('/')
@@ -101,17 +102,10 @@ def delete(id):
 
 @login_required
 @app.route('/download/<int:id>',methods=['GET'])
-def upload():
+def download(id):
     if current_user.is_authenticated==False:
         flash("You are not authorized to access this page!")
         return redirect(url_for('login'))
-    form = UploadForm()
-    if request.method=='POST':
-        uploaded_files = request.files.getlist("file")
-        for file in uploaded_files:
-            upload = File(filename=file.filename,data=file.read())
-            db.session.add(upload)
-            db.session.commit()
-        return redirect(url_for('dashboard'))
-    return render_template('upload.html',form=form)
+    file = File.query.get_or_404(id)
+    return send_file(BytesIO(file.data),download_name=file.filename,as_attachment=True)
             
