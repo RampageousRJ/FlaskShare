@@ -1,18 +1,51 @@
 {% extends 'base.html' %}
 
 {% block title %}
-  Login
+  Admin Dashboard
 {% endblock %}
 
 {% block body %}
     <br />
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-2"></div>
-            <div class="col-md-8">
+            <div class="col-md-1"></div>
+            <div class="col-md-10">
                 <div class="shadow p-3 mb-5 bg-dark rounded">
-                    <h2 class="text-center">Login to Continue</h2>
-                    
+                    <h2 class="text-center">All Files</h2>
+                    <br>
+                    {% if files.count()>0 %}
+                    <table class="table table-hover table-dark">
+                        <thead>
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Filename</th>
+                                <th scope="col">Added On</th>
+                                <th scope="col">Download</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for file in files %}
+                                <tr>
+                                    <td style="vertical-align: center;">{{ file.id }}</td>  
+                                    <td style="vertical-align: center;">{{ file.filename }}</td>
+                                    <td style="vertical-align: center;">{{ moment(file.date_added).fromNow() }}</td>
+                                    {% if current_user.type=='Admin' %}
+                                    <td style="vertical-align: center;">
+                                        <a href="{{url_for('delete',id=file.id)}}" class="btn btn-danger">Remove</a>
+                                    </td>
+                                    {% else %}
+                                    <td style="vertical-align: center;">
+                                        <a href="{{url_for('download',id=file.id)}}" class="btn btn-success">Download</a>
+                                    </td>
+                                    {% endif %}
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% else %}
+                    <br>    
+                    <h6 class="text-center">No files uploaded. <a style="text-decoration: none;" href="{{url_for('upload')}}">Upload Now!</a></h6>
+                    {% endif %}
                 </div>
             </div>
         </div>

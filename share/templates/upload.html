@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  Admin Dashboard
+{% endblock %}
+
+{% block body %}
+    <br />
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-3"></div>
+            <div class="col-md-6">
+                <br>
+                <br>
+                <div class="shadow p-3 mb-5 bg-dark rounded">
+                    <h2 class="text-center">Upload Multiple Files</h2>
+                    <div class="row d-flex flex-wrap align-items-center">
+                        <div class="col">
+                            <form method="POST" class='form-register' enctype="multipart/form-data">
+                                <div class="form-labels" style="padding: 2% 2% 0 2%;">
+                                    {{form.hidden_tag()}}
+                                    <br>
+                                    <br>
+                                    <input class="form-control-file" type="file" name="file" multiple>
+                                    <br>
+                                    {{form.recaptcha.label()}}
+                                    {{form.recaptcha()}}
+                                    <br>
+                                    <div class="form-group text-center">
+                                        {{ form.submit(class = 'btn btn-success') }}
+                                    </div>
+                                </div> 
+                            </form>
+                        </div>  
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <br />
+    <br />
+    <br />
+{% endblock %}

@@ -1,5 +1,6 @@
 from share import db,bcrypt,login_manager
 from flask_login import UserMixin
+from datetime import datetime
 
 @login_manager.user_loader
 def load_user(id):
@@ -29,5 +30,6 @@ class People(db.Model,UserMixin):
     
 class File(db.Model):
     id = db.Column(db.Integer,primary_key=True)
+    date_added = db.Column(db.DateTime, default=datetime.utcnow)
     filename = db.Column(db.String(1024),nullable=False)
     data = db.Column(db.LargeBinary)

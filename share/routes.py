@@ -4,10 +4,12 @@ from flask_bcrypt import check_password_hash
 from flask_login import current_user,login_user,login_required,logout_user
 from share.forms import *
 from share.models import *
+import os
 
 @app.route('/')
 def home():
     return render_template('home.html')
+
 
 @app.route('/register',methods=['GET','POST'])
 def register():
@@ -50,6 +52,66 @@ def login():
 @login_required
 @app.route('/dashboard',methods=['GET','POST'])
 def dashboard():
-    print(current_user.id)
+    files = File.query.order_by(File.date_added.desc())
+    return render_template('dashboard.html',files=files)
+
+@login_required
+@app.route('/logout',methods=['GET','POST'])
+def logout():
     logout_user()
-    return render_template('dashboard.html')
+    flash("Logged out successfully!")   
+    return redirect(url_for('login'))
+
+@login_required
+@app.route('/upload',methods=['GET','POST'])
+def upload():
+    if current_user.type!='Admin':
+        flash("You are not authorized to access this page!")
+        if current_user.is_authenticated:
+            return redirect(url_for('dashboard'))
+        else:
+            return redirect(url_for('login'))
+    form = UploadForm()
+    if request.method=='POST':
+        uploaded_files = request.files.getlist("file")
+        for file in uploaded_files:
+            upload = File(filename=file.filename,data=file.read())
+            db.session.add(upload)
+            db.session.commit()
+        return redirect(url_for('dashboard'))
+    return render_template('upload.html',form=form)
+
+@login_required
+@app.route('/delete/<int:id>',methods=['GET','POST'])
+def delete(id):
+    if current_user.type!='Admin':
+        flash("You are not authorized to access this page!")
+        if current_user.is_authenticated:
+            return redirect(url_for('dashboard'))
+        else:
+            return redirect(url_for('login'))
+    file = File.query.get_or_404(id)
+    try:
+        db.session.delete(file)
+        db.session.commit()
+        flash("Deleted Successfully!")
+    except:
+        flash("Error in deleting! Please try again!")
+    return redirect(url_for('dashboard'))
+
+@login_required
+@app.route('/download/<int:id>',methods=['GET'])
+def upload():
+    if current_user.is_authenticated==False:
+        flash("You are not authorized to access this page!")
+        return redirect(url_for('login'))
+    form = UploadForm()
+    if request.method=='POST':
+        uploaded_files = request.files.getlist("file")
+        for file in uploaded_files:
+            upload = File(filename=file.filename,data=file.read())
+            db.session.add(upload)
+            db.session.commit()
+        return redirect(url_for('dashboard'))
+    return render_template('upload.html',form=form)
+            
