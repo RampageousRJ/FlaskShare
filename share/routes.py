@@ -109,3 +109,7 @@ def download(id):
     file = File.query.get_or_404(id)
     return send_file(BytesIO(file.data),download_name=file.filename,as_attachment=True)
             
+# Page Not Found
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
