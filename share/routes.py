@@ -11,7 +11,6 @@ import os
 def home():
     return render_template('home.html')
 
-
 @app.route('/register',methods=['GET','POST'])
 def register():
     form = RegisterForm()
